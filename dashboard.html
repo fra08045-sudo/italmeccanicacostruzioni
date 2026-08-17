@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Area Riservata</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            min-height: calc(100vh - 100px);
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .dashboard-sidebar {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .dashboard-sidebar ul {
+            list-style: none;
+        }
+
+        .dashboard-sidebar li {
+            margin: 0;
+        }
+
+        .dashboard-sidebar a {
+            display: block;
+            padding: 12px 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-sidebar a:hover,
+        .dashboard-sidebar a.active {
+            background-color: var(--light-color);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .dashboard-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light-color);
+        }
+
+        .dashboard-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        .user-greeting {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-btn {
+            background-color: var(--error-color);
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .project-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .project-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .project-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-in-progress {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-pending {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--light-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), #0d3d52);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .messages-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--light-color);
+        }
+
+        .message-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .message-item strong {
+            color: var(--primary-color);
+        }
+
+        .message-date {
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-sidebar {
+                position: static;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo" onclick="location.href='index.html'">
+                <img src="assets/images/logo.png" alt="Italmeccanica">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="about.html">Chi Siamo</a></li>
+                <li><a href="services.html">Servizi</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="contact.html">Contatti</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-login">Accedi</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <h3 style="color: var(--primary-color); margin-bottom: 20px;">Menu</h3>
+            <ul>
+                <li><a href="#" onclick="showSection('dashboard')" class="menu-link active"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                <li><a href="#" onclick="showSection('projects')" class="menu-link"><i class="fas fa-folder"></i> I Miei Progetti</a></li>
+                <li><a href="#" onclick="showSection('messages')" class="menu-link"><i class="fas fa-envelope"></i> Messaggi</a></li>
+                <li><a href="#" onclick="showSection('profile')" class="menu-link"><i class="fas fa-user"></i> Profilo</a></li>
+                <li><a href="#" onclick="showSection('settings')" class="menu-link"><i class="fas fa-cog"></i> Impostazioni</a></li>
+                <li><a href="#" onclick="logoutUser()" class="logout-btn btn btn-primary full-width" style="margin-top: 20px;"><i class="fas fa-sign-out-alt"></i> Esci</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <div class="dashboard-header">
+                    <div>
+                        <h1>Benvenuto</h1>
+                        <p>Gestisci i tuoi progetti e comunicazioni</p>
+                    </div>
+                    <div class="user-greeting">
+                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: var(--primary-color);"></i>
+                        <div id="userName">
+                            <strong>Caricamento...</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-folder-open" style="font-size: 2rem;"></i>
+                        <div class="stat-number" id="projectCount">0</div>
+                        <div class="stat-label">Progetti Totali</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-color), #d68910);">
+                        <i class="fas fa-hourglass-half" style="font-size: 2rem;"></i>
+                        <div class="stat-number" id="activeCount">0</div>
+                        <div class="stat-label">Progetti Attivi</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, var(--success-color), #1e8449);">
+                        <i class="fas fa-check-circle" style="font-size: 2rem;"></i>
+                        <div class="stat-number" id="completedCount">0</div>
+                        <div class="stat-label">Progetti Completati</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div id="projects" class="section">
+                <div class="dashboard-header">
+                    <h1>I Miei Progetti</h1>
+                    <button class="btn btn-primary" onclick="addNewProject()"><i class="fas fa-plus"></i> Nuovo Progetto</button>
+                </div>
+                <div class="projects-grid" id="projectsList">
+                    <!-- Projects will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Messages Section -->
+            <div id="messages" class="section">
+                <div class="dashboard-header">
+                    <h1>Messaggi</h1>
+                </div>
+                <div class="messages-section" id="messagesList">
+                    <!-- Messages will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile" class="section">
+                <div class="dashboard-header">
+                    <h1>Il Mio Profilo</h1>
+                </div>
+                <form id="profileForm" style="max-width: 500px;">
+                    <div class="form-group">
+                        <label for="fullName">Nome Completo</label>
+                        <input type="text" id="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Azienda</label>
+                        <input type="text" id="company">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefono</label>
+                        <input type="tel" id="phone">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                </form>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="section">
+                <div class="dashboard-header">
+                    <h1>Impostazioni</h1>
+                </div>
+                <form id="settingsForm" style="max-width: 500px;">
+                    <h3 style="color: var(--primary-color); margin-top: 20px;">Sicurezza</h3>
+                    <p>La gestione delle password non è disponibile. L'accesso avviene esclusivamente tramite codice utente (IT001–IT005).</p>
+                    
+                    <h3 style="color: var(--primary-color); margin-top: 30px;">Preferenze</h3>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="emailNotifications" checked>
+                        <label for="emailNotifications">Ricevi notifiche via email</label>
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="smsNotifications">
+                        <label for="smsNotifications">Ricevi notifiche via SMS</label>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Italmeccanica Costruzioni</h4>
+                    <p>Specialisti in soluzioni costruttive innovative</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contatti</h4>
+                    <p>Tel: 095 484186</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Seguici</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-company-info">
+                <div class="info-item">
+                    <span class="info-label">Nome Azienda:</span>
+                    <span class="info-value">ITALMECCANICA COSTRUZIONI S.N.C. DI STRANO FRANCESCO & C.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sede Legale:</span>
+                    <span class="info-value">VIA DEL COMMERCIO 4 - 95058 - CAMPOROTONDO ETNEO (CT)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">P. IVA:</span>
+                    <span class="info-value">03974850871</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Codice Fiscale:</span>
+                    <span class="info-value">03974850871</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">REA:</span>
+                    <span class="info-value">265982</span>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Italmeccanica Costruzioni. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/auth-core.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Load user data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadUserProjects();
+            setupMenuLinks();
+        });
+
+        // Show different sections
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => link.classList.remove('active'));
+            event.target.closest('.menu-link').classList.add('active');
+        }
+
+        // Load user data
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('userName').innerHTML = `
+                <strong>${user.name}</strong>
+                <small style="display: block; color: #999;">${user.email}</small>
+            `;
+
+            // Update profile form
+            document.getElementById('fullName').value = user.name;
+            document.getElementById('email').value = user.email;
+            document.getElementById('company').value = user.company || '';
+        }
+
+        // Load user projects
+        function loadUserProjects() {
+            const user = getCurrentUser();
+            const projects = user.projects || [];
+
+            const projectCount = projects.length;
+            const activeCount = projects.filter(p => p.status === 'In corso').length;
+            const completedCount = projects.filter(p => p.status === 'Completato').length;
+
+            document.getElementById('projectCount').textContent = projectCount;
+            document.getElementById('activeCount').textContent = activeCount;
+            document.getElementById('completedCount').textContent = completedCount;
+
+            const projectsList = document.getElementById('projectsList');
+            projectsList.innerHTML = '';
+
+            projects.forEach(project => {
+                const statusClass = project.status === 'Completato' ? 'status-completed' : 
+                                  project.status === 'In corso' ? 'status-in-progress' : 'status-pending';
+                
+                const projectHTML = `
+                    <div class="project-card">
+                        <h3>${project.name}</h3>
+                        <span class="project-status ${statusClass}">${project.status}</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${project.progress}%"></div>
+                        </div>
+                        <p>Progresso: ${project.progress}%</p>
+                        <button class="btn btn-small btn-primary" onclick="viewProject(${project.id})">
+                            Visualizza Dettagli
+                        </button>
+                    </div>
+                `;
+                projectsList.innerHTML += projectHTML;
+            });
+        }
+
+        // Setup menu links
+        function setupMenuLinks() {
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // Add new project (placeholder)
+        function addNewProject() {
+            alert('Funzionalità di aggiunta nuovo progetto - da implementare');
+        }
+
+        // View project details (placeholder)
+        function viewProject(projectId) {
+            alert('Visualizzazione dettagli progetto #' + projectId + ' - da implementare');
+        }
+
+        // Handle profile form
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Profilo aggiornato con successo!');
+        });
+
+        // Handle settings form
+        document.getElementById('settingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Impostazioni salvate con successo!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../raduni site"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "raduni site"
+	}
+}

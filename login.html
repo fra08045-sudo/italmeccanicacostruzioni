@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Area Team - Italmeccanica</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f3f5f7;color:#222}
+#loginPage{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.login-box{width:100%;max-width:430px;background:#fff;padding:35px;border-radius:18px;box-shadow:0 10px 35px rgba(0,0,0,0.12)}
+.login-box h1{text-align:center;margin-bottom:8px}
+.subtitle{text-align:center;color:#777;margin-bottom:18px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-weight:700;margin-bottom:6px}
+.form-group input{width:100%;padding:12px;border:1px solid #ccc;border-radius:9px;font-size:16px}
+.login-button{width:100%;padding:12px;border-radius:9px;border:none;background:#222;color:#fff;font-weight:700;cursor:pointer}
+.examples{margin-top:14px;font-size:13px;color:#666}
+.team-notice{margin-top:18px;padding:14px;border-radius:10px;background:#f1f1f1;font-size:14px}
+.error-message{display:none;background:#ffe5e5;color:#b00020;border:1px solid #ffb5b5;padding:10px;border-radius:8px;margin-bottom:12px}
+.error-message.show{display:block}
+#teamPage{display:none;min-height:100vh}
+.team-header{height:64px;background:#222;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.chat-container{max-width:1000px;height:calc(100vh - 100px);margin:15px auto;background:#fff;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 5px 25px rgba(0,0,0,0.08)}
+.pinned-area{padding:12px 18px;border-bottom:1px solid #eee;background:#fafafa}
+.pinned-message{padding:10px 12px;background:#fff4bd;border-radius:8px;margin-top:8px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+.messages{flex:1;overflow-y:auto;padding:18px}
+.message{margin-bottom:14px;padding:12px;border-radius:10px;background:#f2f2f2;max-width:75%;position:relative}
+.message.mine{margin-left:auto;background:#e9eef8}
+.message.pinned{border:2px solid #d5b400}
+.message-user{font-size:13px;font-weight:700;margin-bottom:6px}
+.message-text{font-size:15px}
+.message-date{font-size:11px;color:#666;margin-top:8px}
+.message-actions{margin-top:8px;display:flex;gap:8px}
+.message-actions button{border:1px solid #ddd;background:#fff;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:12px}
+.message-form{display:flex;gap:10px;padding:12px;border-top:1px solid #eee}
+.message-form input{flex:1;padding:12px;border:1px solid #ccc;border-radius:9px}
+.message-form button{padding:10px 18px;border-radius:9px;border:none;background:#222;color:#fff;cursor:pointer}
+@media(max-width:600px){.chat-container{height:calc(100vh - 84px);border-radius:0}.message{max-width:90%}}
+
+/* Additional smaller chat adjustments */
+.chat-container { max-width: 820px; height: calc(100vh - 120px); }
+.message { font-size: 14px; padding: 10px; }
+.message-user { font-size: 12px; }
+.message-text { font-size: 14px; }
+.pinned-area { max-height: 120px; overflow-y: auto; }
+.team-header { gap: 12px; }
+#recipientSelect { padding:8px;border-radius:6px;border:1px solid #ccc }
+</style>
+</head>
+<body>
+<section id="loginPage">
+  <div class="login-box">
+    <h1>Area Team</h1>
+    <p class="subtitle">Accesso riservato Italmeccanica</p>
+    <div id="loginError" class="error-message">Codice non valido. Riprova.</div>
+    <form id="loginForm" autocomplete="off">
+      <div class="form-group">
+        <label for="userCode">Codice utente</label>
+        <input id="userCode" type="text" required />
+      </div>
+      <button type="submit" class="login-button">Accedi</button>
+    </form>
+    <div class="team-notice"><strong>⚠ AREA RISERVATA AL TEAM ITALMECCANICA</strong><br/><br/>Questa sezione è esclusivamente riservata ai lavoratori e ai membri autorizzati del team Italmeccanica. Per accedere utilizzare il codice utente fornito dall'azienda. Nessuna registrazione libera è permessa.</div>
+  </div>
+</section>
+
+<section id="teamPage">
+  <header class="team-header">
+    <div><strong>Area Team Italmeccanica</strong></div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div id="loggedUser" style="font-weight:700"></div>
+      <button id="logoutButton" style="padding:8px 12px;border-radius:7px;border:none;cursor:pointer;background:#fff;color:#222;font-weight:700">Esci</button>
+    </div>
+  </header>
+  <main class="chat-container">
+    <div class="pinned-area">
+      <div style="font-weight:700">📌 Messaggi fissati</div>
+      <div id="pinnedMessages">Nessun messaggio fissato.</div>
+    </div>
+
+    <div class="chat-main" style="display:flex;gap:12px;padding:12px;">
+
+      <div class="public-column" style="flex:1;display:flex;flex-direction:column;">
+        <div id="publicMessages" class="messages" style="flex:1;overflow-y:auto;padding:12px;background:#fff;border-radius:8px;border:1px solid #f0f0f0"></div>
+        <form id="publicForm" class="message-form" style="margin-top:10px;display:flex;gap:10px">
+          <input id="publicInput" type="text" placeholder="Scrivi un messaggio pubblico..." autocomplete="off" />
+          <button type="submit">Invia</button>
+        </form>
+      </div>
+
+      <div class="private-column" style="width:360px;display:flex;flex-direction:column;">
+        <div id="privateHeader" style="padding:8px 10px;background:#fff;border-radius:8px;border:1px solid #f0f0f0;display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <!-- recipientSelect verrà inserito qui dinamicamente -->
+        </div>
+        <div id="privateMessages" class="messages" style="flex:1;overflow-y:auto;padding:12px;background:#fff;border-radius:8px;border:1px solid #f0f0f0"></div>
+        <form id="privateForm" class="message-form" style="margin-top:10px;display:flex;gap:10px;">
+          <input id="privateInput" type="text" placeholder="Seleziona un destinatario per inviare messaggi privati" autocomplete="off" disabled />
+          <button type="submit">Invia</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+</section>
+
+<script>
+// Mappa codici -> nomi (solo i 5 autorizzati)
+const allowedUsers = {
+  'IT001': 'Strano Francesco',
+  'IT002': 'Pappalardo Nunzio',
+  'IT003': 'Alloni Gianluca',
+  'IT004': 'Ravalli Davide',
+  'IT005': "D'Amico Antonio"
+};
+
+// Elementi
+const loginPage = document.getElementById('loginPage');
+const teamPage = document.getElementById('teamPage');
+const loginForm = document.getElementById('loginForm');
+const userCodeInput = document.getElementById('userCode');
+const loginError = document.getElementById('loginError');
+const loggedUserEl = document.getElementById('loggedUser');
+const logoutButton = document.getElementById('logoutButton');
+const pinnedContainer = document.getElementById('pinnedMessages');
+
+// Utility
+function getMessages(){ return JSON.parse(localStorage.getItem('teamMessages') || '[]'); }
+function saveMessages(msgs){ localStorage.setItem('teamMessages', JSON.stringify(msgs)); }
+
+// Login (solo codice)
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const code = (userCodeInput.value || '').trim().toUpperCase();
+  loginError.classList.remove('show');
+  if (!allowedUsers[code]) {
+    loginError.textContent = 'Codice non valido. Riprova.';
+    loginError.classList.add('show');
+    return;
+  }
+  sessionStorage.setItem('teamUser', code);
+  showTeamPage();
+});
+
+function showTeamPage(){
+  const code = sessionStorage.getItem('teamUser');
+  if (!code || !allowedUsers[code]) { showLoginPage(); return; }
+  loginPage.style.display = 'none';
+  teamPage.style.display = 'block';
+  loggedUserEl.textContent = allowedUsers[code] + ' ('+code+')';
+  ensureRecipientSelect();
+  ensureDirectorControls();
+  loadPublicMessages();
+  loadPrivateMessages();
+}
+function showLoginPage(){ teamPage.style.display = 'none'; loginPage.style.display = 'flex'; }
+logoutButton.addEventListener('click', ()=>{ sessionStorage.removeItem('teamUser'); showLoginPage(); });
+
+// Recipient select: private 1:1 chat
+function ensureRecipientSelect(){
+  if (document.getElementById('recipientSelect')) return;
+  const sel = document.createElement('select'); sel.id = 'recipientSelect';
+  const placeholder = document.createElement('option'); placeholder.value=''; placeholder.textContent='Seleziona destinatario'; sel.appendChild(placeholder);
+  const current = sessionStorage.getItem('teamUser');
+  // include all other users as possible recipients
+  for (const code in allowedUsers){
+    if (code === current) continue;
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = allowedUsers[code] + ' ('+code+')';
+    sel.appendChild(opt);
+  }
+  sel.addEventListener('change', ()=> {
+    updateConversationLabel();
+    loadPrivateMessages();
+  });
+  // insert into private header area
+  const pHeader = document.getElementById('privateHeader');
+  if (pHeader) {
+    // remove previous select if any
+    const existing = document.getElementById('recipientSelect');
+    if (existing) existing.remove();
+    pHeader.insertBefore(sel, pHeader.firstChild);
+  } else {
+    // fallback: insert into team header
+    const header = document.querySelector('.team-header');
+    header.insertBefore(sel, header.querySelector('.user-area'));
+  }
+  // initialize label and input state
+  updateConversationLabel();
+}
+
+
+function updateConversationLabel(){
+  const lbl = document.getElementById('convLabel');
+  const sel = document.getElementById('recipientSelect');
+  const current = sessionStorage.getItem('teamUser');
+  if (!lbl) return;
+  if (!sel || !sel.value){
+    lbl.textContent = 'Chat privata';
+  if (privateInput) privateInput.disabled = true;
+  if (privateInput) privateInput.placeholder = 'Seleziona un destinatario per iniziare la chat';
+  } else {
+    lbl.textContent = 'Chat con ' + (allowedUsers[sel.value] || sel.value) + ' ('+sel.value+')';
+  if (privateInput) privateInput.disabled = false;
+  if (privateInput) privateInput.placeholder = 'Scrivi un messaggio per ' + (allowedUsers[sel.value] || sel.value);
+  }
+}
+
+// Director controls (IT001 & IT002)
+function ensureDirectorControls(){
+  const current = sessionStorage.getItem('teamUser');
+  if (!['IT001','IT002'].includes(current)) return; // only directors
+  if (document.getElementById('directorControls')) return;
+  const container = document.createElement('div'); container.id='directorControls'; container.style.padding='12px'; container.style.background='#fff7ea'; container.style.borderTop='1px solid #eee';
+
+  // Salary announcement form
+  const salaryForm = document.createElement('div'); salaryForm.style.marginBottom='10px';
+  salaryForm.innerHTML = `<strong>Annuncio Stipendio (fissa per specifici lavoratori)</strong><br/><label>Data stipendio: <input type="date" id="salaryDate"></label><br/><textarea id="salaryText" placeholder="Testo annuncio (opzionale)" style="width:100%;margin-top:6px;padding:8px;border-radius:6px;border:1px solid #ccc"></textarea><br/><button id="salaryPinBtn" style="margin-top:8px;padding:8px 10px;border-radius:6px;border:none;background:#d5a500;color:#111;cursor:pointer">Pubblica annuncio stipendio</button>`;
+  container.appendChild(salaryForm);
+
+  // Assignment form
+  const assignForm = document.createElement('div');
+  assignForm.innerHTML = `<strong>Assegna lavoro esterno</strong><br/>Destinatari:<br/>`;
+  // multiselect checkboxes for recipients (non-directors)
+  const recs = document.createElement('div'); recs.style.margin='6px 0';
+  ['IT003','IT004','IT005'].forEach(code=>{ const cb = document.createElement('label'); cb.style.display='block'; cb.innerHTML = `<input type="checkbox" class="assignCb" value="${code}"> ${allowedUsers[code]} (${code})`; recs.appendChild(cb); });
+  assignForm.appendChild(recs);
+  assignForm.innerHTML += `Data e ora: <input type="datetime-local" id="assignDate"><br/>Luogo: <input type="text" id="assignLocation" placeholder="Luogo" style="width:60%;padding:6px;margin-top:6px;border-radius:6px;border:1px solid #ccc"><br/>Note:<br/><textarea id="assignNote" style="width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;margin-top:6px"></textarea><br/><button id="assignBtn" style="margin-top:8px;padding:8px 10px;border-radius:6px;border:none;background:#1a73e8;color:#fff;cursor:pointer">Invia incarico</button>`;
+  container.appendChild(assignForm);
+
+  // attach
+  const chatContainer = document.querySelector('.chat-container');
+  chatContainer.parentNode.insertBefore(container, chatContainer);
+
+  // handlers
+  document.getElementById('salaryPinBtn').addEventListener('click', ()=>{
+    const current = sessionStorage.getItem('teamUser');
+    if (!['IT001','IT002'].includes(current)) { alert('Non sei autorizzato a pubblicare annunci stipendio.'); return; }
+    const date = document.getElementById('salaryDate').value;
+    const text = document.getElementById('salaryText').value || '';
+    if (!date){ alert('Seleziona una data per l\'annuncio.'); return; }
+    // create message pinned for IT003,IT004,IT005
+    const msg = { id: Date.now(), code: current, user: allowedUsers[current], type:'salary', text: `Stipendio inserito in data ${date}. ${text}`, date: new Date().toLocaleString('it-IT'), pinned:true, pinnedFor:['IT003','IT004','IT005'] };
+    const msgs = getMessages(); msgs.push(msg); saveMessages(msgs); loadPublicMessages(); loadPrivateMessages(); loadPinnedMessages(); alert('Annuncio stipendio pubblicato e fissato per i destinatari selezionati.');
+  });
+
+  document.getElementById('assignBtn').addEventListener('click', ()=>{
+    const current = sessionStorage.getItem('teamUser');
+    if (!['IT001','IT002'].includes(current)) { alert('Non sei autorizzato a creare incarichi esterni.'); return; }
+    const checked = Array.from(document.querySelectorAll('.assignCb:checked')).map(i=>i.value);
+    if (checked.length===0){ alert('Seleziona almeno un destinatario.'); return; }
+    const when = document.getElementById('assignDate').value;
+    const where = document.getElementById('assignLocation').value || '(luogo non specificato)';
+    const note = document.getElementById('assignNote').value || '';
+    if (!when){ alert('Seleziona data/ora per l\'incarico.'); return; }
+    const msg = { id: Date.now(), code: current, user: allowedUsers[current], type:'assignment', text:`Incarico esterno: ${where} - ${new Date(when).toLocaleString('it-IT')}. ${note}`, date: new Date().toLocaleString('it-IT'), assignedTo: checked };
+    const msgs = getMessages(); msgs.push(msg); saveMessages(msgs); loadPublicMessages(); loadPrivateMessages(); loadPinnedMessages(); alert('Incarico inviato ai destinatari selezionati.');
+  });
+}
+
+// Public message form (visible to all)
+const publicForm = document.getElementById('publicForm');
+const publicInput = document.getElementById('publicInput');
+const publicMessagesContainer = document.getElementById('publicMessages');
+const privateMessagesContainer = document.getElementById('privateMessages');
+const privateForm = document.getElementById('privateForm');
+const privateInput = document.getElementById('privateInput');
+
+publicForm.addEventListener('submit',(e)=>{
+  e.preventDefault();
+  const text = (publicInput.value||'').trim(); if (!text) return;
+  const code = sessionStorage.getItem('teamUser'); if (!code) return;
+  const msgs = getMessages();
+  msgs.push({ id: Date.now(), code, user: allowedUsers[code], type:'public', text, date: new Date().toLocaleString('it-IT'), pinned:false });
+  saveMessages(msgs); publicInput.value=''; loadPublicMessages();
+});
+
+// Private message form (1:1)
+privateForm.addEventListener('submit',(e)=>{
+  e.preventDefault();
+  const text = (privateInput.value||'').trim(); if (!text) return;
+  const code = sessionStorage.getItem('teamUser'); if (!code) return;
+  const sel = document.getElementById('recipientSelect'); if (!sel || !sel.value){ alert('Seleziona un destinatario prima di inviare.'); return; }
+  const to = sel.value;
+  const msgs = getMessages();
+  msgs.push({ id: Date.now(), code, user: allowedUsers[code], to, type:'message', text, date: new Date().toLocaleString('it-IT'), pinned:false });
+  saveMessages(msgs); privateInput.value=''; loadPrivateMessages();
+});
+
+// Load public messages (feed: public + assignments visible to current)
+function loadPublicMessages(){
+  const all = getMessages();
+  publicMessagesContainer.innerHTML = '';
+  const current = sessionStorage.getItem('teamUser');
+  const visible = all.filter(m => {
+    if (m.type === 'public') return true;
+    if (m.type === 'assignment'){
+      // show assignment if assigned to current or if author is current
+      if (m.code === current) return true;
+      if (m.assignedTo && m.assignedTo.includes(current)) return true;
+      return false;
+    }
+    if (m.type === 'salary'){
+      // show salary announcements only if pinnedFor includes current or current is director
+      if (m.pinnedFor && m.pinnedFor.includes(current)) return true;
+      if (['IT001','IT002'].includes(current)) return true;
+      return false;
+    }
+    return false;
+  });
+
+  visible.forEach(m=>{
+    const el = document.createElement('div'); el.className='message';
+    if (m.code===current) el.classList.add('mine');
+    if (m.pinned) el.classList.add('pinned');
+    let content = `<div class="message-user">${escapeHTML(m.user)}${m.to? ' → '+(allowedUsers[m.to]||m.to):''}</div>`;
+    if (m.type==='assignment'){
+      content += `<div class="message-text"><strong>Incarico:</strong> ${escapeHTML(m.text)}</div>`;
+    } else if (m.type==='salary'){
+      content += `<div class="message-text"><strong>Annuncio stipendio:</strong> ${escapeHTML(m.text)}</div>`;
+    } else {
+      content += `<div class="message-text">${escapeHTML(m.text)}</div>`;
+    }
+    content += `<div class="message-date">${m.date}</div>`;
+    el.innerHTML = content;
+    const actions = document.createElement('div'); actions.className='message-actions';
+    if (m.code === current){ const del = document.createElement('button'); del.textContent='🗑 Elimina'; del.addEventListener('click', ()=>deleteMessage(m.id)); actions.appendChild(del); }
+    el.appendChild(actions);
+    publicMessagesContainer.appendChild(el);
+  });
+  loadPinnedMessages();
+}
+
+// Load private 1:1 conversation messages between current and selected recipient
+function loadPrivateMessages(){
+  const all = getMessages();
+  privateMessagesContainer.innerHTML = '';
+  const current = sessionStorage.getItem('teamUser');
+  const sel = document.getElementById('recipientSelect');
+  const other = sel && sel.value ? sel.value : null;
+  updateConversationLabel();
+  if (!other){ privateMessagesContainer.innerHTML = '<div style="padding:20px;color:#666">Seleziona un destinatario per vedere la chat privata.</div>'; return; }
+  const conv = all.filter(m => m.type === 'message' && ((m.code===current && m.to===other) || (m.code===other && m.to===current)));
+  conv.forEach(m=>{
+    const el = document.createElement('div'); el.className='message'; if (m.code===current) el.classList.add('mine');
+    el.innerHTML = `<div class="message-user">${escapeHTML(m.user)}</div><div class="message-text">${escapeHTML(m.text)}</div><div class="message-date">${m.date}</div>`;
+    const actions = document.createElement('div'); actions.className='message-actions';
+    if (m.code === current){ const del = document.createElement('button'); del.textContent='🗑 Elimina'; del.addEventListener('click', ()=>deleteMessage(m.id)); actions.appendChild(del); }
+    el.appendChild(actions);
+    privateMessagesContainer.appendChild(el);
+  });
+  privateMessagesContainer.scrollTop = privateMessagesContainer.scrollHeight;
+}
+
+// Reuse togglePin and deleteMessage existing functions
+
+
+
+function loadPinnedMessages(){
+  const all = getMessages();
+  const current = sessionStorage.getItem('teamUser');
+  const pinned = all.filter(m=> m.pinned && ( (m.pinnedFor && m.pinnedFor.includes(current)) || (m.pinnedFor && m.pinnedFor.includes('all')) ));
+  pinnedContainer.innerHTML = '';
+  if (pinned.length===0){ pinnedContainer.textContent='Nessun messaggio fissato.'; return; }
+  pinned.forEach(m=>{ const el = document.createElement('div'); el.className='pinned-message'; el.textContent = `${m.user}: ${m.text}`; pinnedContainer.appendChild(el); });
+}
+
+function togglePin(id){
+  const msgs = getMessages();
+  const m = msgs.find(x=>x.id===id);
+  if(!m) return;
+  m.pinned = !m.pinned;
+  if (m.pinned && !m.pinnedFor) m.pinnedFor = ['all'];
+  saveMessages(msgs);
+  loadPublicMessages();
+  loadPrivateMessages();
+  loadPinnedMessages();
+}
+
+function deleteMessage(id){
+  const msgs = getMessages();
+  const current = sessionStorage.getItem('teamUser');
+  const m = msgs.find(x=>x.id===id);
+  if(!m) return;
+  if (m.code !== current){ alert('Non puoi eliminare questo messaggio.'); return; }
+  if (!confirm('Vuoi eliminare definitivamente questo messaggio?')) return;
+  const updated = msgs.filter(x=>x.id!==id);
+  saveMessages(updated);
+  loadPublicMessages();
+  loadPrivateMessages();
+  loadPinnedMessages();
+}
+
+function escapeHTML(s){ const d=document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// Avvio
+if (sessionStorage.getItem('teamUser') && allowedUsers[sessionStorage.getItem('teamUser')]){
+  showTeamPage();
+} else {
+  showLoginPage();
+}
+</script>
+</body>
+</html>

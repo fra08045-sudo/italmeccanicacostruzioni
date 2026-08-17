@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <!-- Background -->
+  <rect width="300" height="300" fill="white"/>
+  
+  <!-- Welder -->
+  <g transform="translate(150, 80)">
+    <!-- Head -->
+    <circle cx="0" cy="-40" r="15" fill="black"/>
+    
+    <!-- Welding helmet -->
+    <ellipse cx="0" cy="-35" rx="20" ry="15" fill="black" opacity="0.8"/>
+    <rect x="-12" y="-32" width="24" height="12" rx="2" fill="#333" stroke="black" stroke-width="1.5"/>
+    
+    <!-- Welding sparks -->
+    <circle cx="25" cy="-20" r="2" fill="#FF6B00"/>
+    <circle cx="28" cy="-18" r="1.5" fill="#FF6B00"/>
+    <circle cx="26" cy="-15" r="1.5" fill="#FF6B00"/>
+    <line x1="25" y1="-20" x2="35" y2="-10" stroke="#FF6B00" stroke-width="1" opacity="0.7"/>
+    
+    <!-- Body -->
+    <rect x="-12" y="-15" width="24" height="35" rx="3" fill="black"/>
+    
+    <!-- Arms -->
+    <line x1="-12" y1="-5" x2="-30" y2="-15" stroke="black" stroke-width="6" stroke-linecap="round"/>
+    <line x1="12" y1="-5" x2="30" y2="5" stroke="black" stroke-width="6" stroke-linecap="round"/>
+    
+    <!-- Welding torch -->
+    <line x1="30" y1="5" x2="45" y2="20" stroke="black" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="45" cy="20" r="3.5" fill="black"/>
+    
+    <!-- Legs -->
+    <line x1="-6" y1="20" x2="-8" y2="40" stroke="black" stroke-width="5" stroke-linecap="round"/>
+    <line x1="6" y1="20" x2="8" y2="40" stroke="black" stroke-width="5" stroke-linecap="round"/>
+    
+    <!-- Feet -->
+    <ellipse cx="-8" cy="42" rx="5" ry="3" fill="black"/>
+    <ellipse cx="8" cy="42" rx="5" ry="3" fill="black"/>
+  </g>
+  
+  <!-- Steel beam/metal piece being welded -->
+  <g transform="translate(150, 150)">
+    <rect x="-70" y="-5" width="140" height="15" rx="2" fill="black" stroke="black" stroke-width="1"/>
+    <rect x="-60" y="-8" width="120" height="5" fill="#555"/>
+    
+    <!-- Weld seam -->
+    <path d="M -50 0 Q -30 -3 0 0 Q 30 3 50 0" stroke="#FF6B00" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="-40" cy="0" r="1.5" fill="#FFB84D"/>
+    <circle cx="0" cy="0" r="1.5" fill="#FFB84D"/>
+    <circle cx="40" cy="0" r="1.5" fill="#FFB84D"/>
+  </g>
+  
+  <!-- Company name at bottom -->
+  <text x="150" y="270" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="black">
+    ITALMECCANICA
+  </text>
+</svg>

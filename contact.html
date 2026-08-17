@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatti - Italmeccanica Costruzioni</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo" onclick="location.href='index.html'">
+                <img src="assets/images/logo.png" alt="Italmeccanica">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="about.html">Chi Siamo</a></li>
+                <li><a href="services.html">Servizi</a></li>
+                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="contact.html" class="active">Contatti</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-login">Accedi</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1>Contattaci</h1>
+            <p>Invia una richiesta o avvia una chat con il nostro team</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Contact Info -->
+                <div class="contact-info contact-info-centered">
+                    <h2>Informazioni di Contatto</h2>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>Indirizzo</h3>
+                            <p>Via del Commercio, 4<br>95058 Camporotondo Etneo (CT), Italia</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h3>Telefono</h3>
+                            <p>Tel: +39 095 484186</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3>Orari</h3>
+                            <p>Lunedì - Venerdì: 07:00 - 17:00</p>
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Chat Section -->
+    <section class="chat-section">
+        <div class="container">
+            <h2>Chat In Tempo Reale</h2>
+            <p>Contatta il nostro team direttamente via chat</p>
+            <button class="btn btn-primary" onclick="openChat()">
+                <i class="fas fa-comments"></i> Apri Chat
+            </button>
+        </div>
+    </section>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="modal">
+        <div class="modal-content chat-modal">
+            <div class="modal-header">
+                <h2>Chat Support</h2>
+                <span class="close" onclick="closeChat()">&times;</span>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    <p>Ciao! Sono l'assistente di Italmeccanica Costruzioni. Come posso aiutarti?</p>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Scrivi un messaggio..." onkeypress="handleChatKeypress(event)">
+                <button onclick="sendChatMessage()" class="btn-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Italmeccanica Costruzioni</h4>
+                    <p>Specialisti in soluzioni costruttive innovative</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contatti</h4>
+                    <p>Tel: +39 095 484186<br>Via del Commercio, 4 - 95058 Camporotondo Etneo (CT)</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Seguici</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-company-info">
+                <div class="info-item">
+                    <span class="info-label">Nome Azienda:</span>
+                    <span class="info-value">ITALMECCANICA COSTRUZIONI S.N.C. DI STRANO FRANCESCO & C.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sede Legale:</span>
+                    <span class="info-value">VIA DEL COMMERCIO 4 - 95058 - CAMPOROTONDO ETNEO (CT)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">P. IVA:</span>
+                    <span class="info-value">03974850871</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Codice Fiscale:</span>
+                    <span class="info-value">03974850871</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">REA:</span>
+                    <span class="info-value">265982</span>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Italmeccanica Costruzioni. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/messaging.js"></script>
+</body>
+</html>

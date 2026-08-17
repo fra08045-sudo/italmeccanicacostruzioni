@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Italmeccanica Costruzioni</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo" onclick="location.href='index.html'">
+                <img src="assets/images/logo.png" alt="Italmeccanica">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="about.html">Chi Siamo</a></li>
+                <li><a href="services.html">Servizi</a></li>
+                <li><a href="portfolio.html" class="active">Portfolio</a></li>
+                <li><a href="contact.html">Contatti</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-login">Accedi</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1>Il Nostro Portfolio</h1>
+            <p>Scopri i nostri progetti realizzati con eccellenza</p>
+        </div>
+    </section>
+
+    <!-- Portfolio Filters -->
+    <section class="portfolio-filters">
+        <div class="container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Tutti</button>
+                <button class="filter-btn" data-filter="residential">Residenziali</button>
+                <button class="filter-btn" data-filter="commercial">Commerciali</button>
+                <button class="filter-btn" data-filter="renovation">Ristrutturazioni</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Projects -->
+    <section class="portfolio">
+        <div class="container">
+            <div class="portfolio-grid">
+                <!-- Project: Pista -->
+                <div class="portfolio-item" data-category="commercial">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-pista.jpg" alt="Pista" style="width:100%;height:250px;object-fit:cover;" />
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Struttura Pista</h3>
+                        <p class="project-year">2026</p>
+                        <p>Realizzazione di struttura metallica per area logistico-industriale.</p>
+                        <div class="project-tags">
+                            <span>Industriale</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Scala esterna -->
+                <div class="portfolio-item" data-category="residential">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-scala1.jpg" alt="Scala Esterna" style="width:100%;height:250px;object-fit:cover;" />
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Rampa e Scala Esterna</h3>
+                        <p class="project-year">2025</p>
+                        <p>Realizzazione di rampa e scala esterna per accessibilità e sicurezza.</p>
+                        <div class="project-tags">
+                            <span>Accessibilità</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Scala interna -->
+                <div class="portfolio-item" data-category="renovation">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-scala2.jpg" alt="Scala Interna" style="width:100%;height:250px;object-fit:cover;" />
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Scala Interna</h3>
+                        <p class="project-year">2023</p>
+                        <p>Realizzazione di scala interna in carpenteria metallica per abitazioni.</p>
+                        <div class="project-tags">
+                            <span>Residenziale</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Capannone -->
+                <div class="portfolio-item" data-category="commercial">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-capannone.jpg" alt="Capannone" style="width:100%;height:250px;object-fit:cover;" />
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Capannone Industriale</h3>
+                        <p class="project-year">2024</p>
+                        <p>Struttura capannone con carpenteria e coperture metalliche.</p>
+                        <div class="project-tags">
+                            <span>Industriale</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project: Anfiteatro -->
+                <div class="portfolio-item" data-category="commercial">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-anfiteatro.jpg" alt="Anfiteatro" style="width:100%;height:250px;object-fit:cover;" />
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Intervento Anfiteatro</h3>
+                        <p class="project-year">2025</p>
+                        <p>Interventi strutturali e passerelle in ferro per area archeologica.</p>
+                        <div class="project-tags">
+                            <span>Restauro</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Italmeccanica Costruzioni</h4>
+                    <p>Specialisti in soluzioni costruttive innovative</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contatti</h4>
+                    <p>Tel: 095 484186</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Seguici</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-company-info">
+                <div class="info-item">
+                    <span class="info-label">Nome Azienda:</span>
+                    <span class="info-value">ITALMECCANICA COSTRUZIONI S.N.C. DI STRANO FRANCESCO & C.</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Sede Legale:</span>
+                    <span class="info-value">VIA DEL COMMERCIO 4 - 95058 - CAMPOROTONDO ETNEO (CT)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">P. IVA:</span>
+                    <span class="info-value">03974850871</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Codice Fiscale:</span>
+                    <span class="info-value">03974850871</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">REA:</span>
+                    <span class="info-value">265982</span>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Italmeccanica Costruzioni. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
