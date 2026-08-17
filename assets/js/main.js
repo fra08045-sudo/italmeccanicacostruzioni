@@ -72,6 +72,11 @@ document.addEventListener('DOMContentLoaded', function () {
             hamburger.setAttribute('aria-expanded', opened ? 'true' : 'false');
             // prevent body scroll when menu is open
             document.body.style.overflow = opened ? 'hidden' : '';
+            // focus first link for accessibility when opened
+            if (opened) {
+                const firstLink = navLinks.querySelector('a');
+                if (firstLink) firstLink.focus();
+            }
         });
 
         // close menu when clicking outside of the nav-links or hamburger
@@ -97,6 +102,15 @@ document.addEventListener('DOMContentLoaded', function () {
         // support Escape key to close
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && navbar.classList.contains('nav-open')) {
+                navbar.classList.remove('nav-open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // ensure menu closes when resizing the window
+        window.addEventListener('resize', function () {
+            if (navbar.classList.contains('nav-open')) {
                 navbar.classList.remove('nav-open');
                 hamburger.setAttribute('aria-expanded', 'false');
                 document.body.style.overflow = '';

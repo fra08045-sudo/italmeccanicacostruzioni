@@ -94,12 +94,13 @@ body {
 }
 
 .hamburger {
-    display: none;
+    display: flex; /* visible on all sizes per user request */
     flex-direction: column;
     cursor: pointer;
     background: transparent;
     border: none;
     padding: 8px;
+    z-index: 1100;
 }
 
 .hamburger span {
@@ -114,102 +115,116 @@ body {
 
 /* Group nav menu and actions so mobile overlay can show them together */
 .nav-links {
+    /* hidden by default; presented as a full-screen overlay when opened */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: white;
     display: flex;
-    align-items: center;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 110px 20px 20px; /* leave room for logo area */
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.28s ease, opacity 0.28s ease, visibility 0.28s;
+    z-index: 1050; /* above other content */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Mobile styles */
-@media (max-width: 768px) {
-    /* show hamburger on small screens */
-    .hamburger {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1100;
-    }
+/* stack menu items vertically and increase touch targets */
+.nav-links .nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+    margin-top: 8px;
+}
 
-    /* prepare nav-links as a full-screen overlay (hidden by default) */
-    .nav-links {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background: white;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-start;
-        padding: 120px 20px 20px; /* leave room for logo area */
-        transform: translateY(-10px);
-        opacity: 0;
-        visibility: hidden;
-        transition: transform 0.28s ease, opacity 0.28s ease, visibility 0.28s;
-        z-index: 1050; /* above other content */
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+.nav-links .nav-menu li { list-style: none; }
 
-    /* stack menu items vertically and increase touch targets */
-    .nav-links .nav-menu {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        padding: 0;
-        margin-top: 8px;
-    }
+.nav-links .nav-menu a {
+    font-size: 1.15rem;
+    padding: 16px 14px;
+    display: block;
+    border-radius: 8px;
+    color: var(--primary-color);
+    -webkit-tap-highlight-color: rgba(0,0,0,0.05);
+}
 
-    .nav-links .nav-menu li { list-style: none; }
+.nav-links .nav-menu a:hover,
+.nav-links .nav-menu a.active {
+    background-color: var(--primary-color);
+    color: white;
+}
 
-    .nav-links .nav-menu a {
-        font-size: 1.15rem;
-        padding: 16px 14px;
-        display: block;
-        border-radius: 8px;
-        color: var(--primary-color);
-        -webkit-tap-highlight-color: rgba(0,0,0,0.05);
-    }
+.nav-links .nav-actions {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 40px;
+}
 
-    .nav-links .nav-menu a:hover,
-    .nav-links .nav-menu a.active {
-        background-color: var(--primary-color);
-        color: white;
-    }
+.nav-links .nav-actions .btn-login {
+    padding: 14px 22px;
+    font-size: 1rem;
+}
 
-    .nav-links .nav-actions {
-        margin-top: 18px;
-        display: flex;
-        justify-content: center;
-        padding-bottom: 40px;
-    }
+/* when menu is opened by toggling .nav-open on .navbar */
+.navbar.nav-open .nav-links {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
 
-    .nav-links .nav-actions .btn-login {
-        padding: 14px 22px;
-        font-size: 1rem;
-    }
+/* animate hamburger into an X */
+.hamburger span { background-color: var(--primary-color); }
+.navbar.nav-open .hamburger span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.navbar.nav-open .hamburger span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+.navbar.nav-open .hamburger span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
 
-    /* when menu is opened by toggling .nav-open on .navbar */
-    .navbar.nav-open .nav-links {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-    }
+/* make touch targets larger and consistent across devices */
+.nav-links .nav-menu a { min-height: 48px; line-height: 48px; }
 
-    /* animate hamburger into an X */
-    .hamburger span { background-color: var(--primary-color); }
-    .navbar.nav-open .hamburger span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
-    .navbar.nav-open .hamburger span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
-    .navbar.nav-open .hamburger span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+/* subtle shadow to ensure visibility over videos/images */
+.nav-links { box-shadow: 0 6px 30px rgba(0,0,0,0.2); }
 
-    /* make touch targets larger and consistent across devices */
-    .nav-links .nav-menu a { min-height: 48px; line-height: 48px; }
+/* keep logo above the overlay */
+.navbar .logo { z-index: 1101; position: relative; }
 
-    /* subtle shadow to ensure visibility over videos/images */
-    .nav-links { box-shadow: 0 6px 30px rgba(0,0,0,0.2); }
+/* Notice bar under navbar */
+.notice-bar {
+    background: #000;
+    color: #fff;
+    height: 28px;
+    display: block;
+    overflow: hidden;
+    position: relative;
+    z-index: 99; /* below navbar */
+}
 
-    /* keep logo above the overlay */
-    .navbar .logo { z-index: 1101; position: relative; }
+.notice-track {
+    display: inline-block;
+    white-space: nowrap;
+    will-change: transform;
+    animation: marquee 12s linear infinite;
+    padding-left: 100%;
+}
+
+.notice-track span {
+    display: inline-block;
+    padding: 4px 2rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
 }
 
 /* Hero Section */
