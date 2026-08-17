@@ -14,20 +14,26 @@
             <div class="logo" onclick="location.href='index.html'">
                 <img src="assets/images/logo.png" alt="Italmeccanica">
             </div>
-            <ul class="nav-menu">
-                <li><a href="about.html">Chi Siamo</a></li>
-                <li><a href="services.html">Servizi</a></li>
-                <li><a href="portfolio.html">Portfolio</a></li>
-                <li><a href="contact.html">Contatti</a></li>
-            </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+
+            <!-- nav-links groups the menu items and actions so they can be shown in mobile overlay -->
+            <div class="nav-links" id="mobile-menu">
+                <ul class="nav-menu">
+                    <li><a href="about.html">Chi Siamo</a></li>
+                    <li><a href="services.html">Servizi</a></li>
+                    <li><a href="portfolio.html">Portfolio</a></li>
+                    <li><a href="contact.html">Contatti</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="login.html" class="btn btn-login">Accedi</a>
+                </div>
             </div>
-            <div class="nav-actions">
-                <a href="login.html" class="btn btn-login">Accedi</a>
-            </div>
+
+            <!-- hamburger button shown on small screens -->
+            <button class="hamburger" aria-label="Apri menu" aria-expanded="false" aria-controls="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 

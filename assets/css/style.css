@@ -97,6 +97,9 @@ body {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 8px;
 }
 
 .hamburger span {
@@ -104,8 +107,109 @@ body {
     height: 3px;
     background-color: black;
     margin: 5px 0;
-    transition: 0.3s;
+    transition: 0.25s ease;
     border-radius: 2px;
+    display: block;
+}
+
+/* Group nav menu and actions so mobile overlay can show them together */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    /* show hamburger on small screens */
+    .hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1100;
+    }
+
+    /* prepare nav-links as a full-screen overlay (hidden by default) */
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 120px 20px 20px; /* leave room for logo area */
+        transform: translateY(-10px);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.28s ease, opacity 0.28s ease, visibility 0.28s;
+        z-index: 1050; /* above other content */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* stack menu items vertically and increase touch targets */
+    .nav-links .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 0;
+        margin-top: 8px;
+    }
+
+    .nav-links .nav-menu li { list-style: none; }
+
+    .nav-links .nav-menu a {
+        font-size: 1.15rem;
+        padding: 16px 14px;
+        display: block;
+        border-radius: 8px;
+        color: var(--primary-color);
+        -webkit-tap-highlight-color: rgba(0,0,0,0.05);
+    }
+
+    .nav-links .nav-menu a:hover,
+    .nav-links .nav-menu a.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .nav-links .nav-actions {
+        margin-top: 18px;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 40px;
+    }
+
+    .nav-links .nav-actions .btn-login {
+        padding: 14px 22px;
+        font-size: 1rem;
+    }
+
+    /* when menu is opened by toggling .nav-open on .navbar */
+    .navbar.nav-open .nav-links {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* animate hamburger into an X */
+    .hamburger span { background-color: var(--primary-color); }
+    .navbar.nav-open .hamburger span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+    .navbar.nav-open .hamburger span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+    .navbar.nav-open .hamburger span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+    /* make touch targets larger and consistent across devices */
+    .nav-links .nav-menu a { min-height: 48px; line-height: 48px; }
+
+    /* subtle shadow to ensure visibility over videos/images */
+    .nav-links { box-shadow: 0 6px 30px rgba(0,0,0,0.2); }
+
+    /* keep logo above the overlay */
+    .navbar .logo { z-index: 1101; position: relative; }
 }
 
 /* Hero Section */
