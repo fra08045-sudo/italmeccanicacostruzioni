@@ -1,4 +1,52 @@
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
+    const viewportSwitcher = document.createElement('div');
+    viewportSwitcher.className = 'viewport-switcher';
+
+    const desktopBtn = document.createElement('button');
+    desktopBtn.type = 'button';
+    desktopBtn.className = 'viewport-btn is-active';
+    desktopBtn.textContent = 'PC';
+
+    const mobileBtn = document.createElement('button');
+    mobileBtn.type = 'button';
+    mobileBtn.className = 'viewport-btn';
+    mobileBtn.textContent = 'Smartphone';
+
+    viewportSwitcher.appendChild(desktopBtn);
+    viewportSwitcher.appendChild(mobileBtn);
+    document.body.appendChild(viewportSwitcher);
+
+    function setViewportMode(mode) {
+        const isMobile = mode === 'mobile';
+        document.documentElement.classList.toggle('viewport-mobile', isMobile);
+        desktopBtn.classList.toggle('is-active', !isMobile);
+        mobileBtn.classList.toggle('is-active', isMobile);
+            try {
+                localStorage.setItem('viewport-mode', mode);
+            } catch (e) {
+                // localStorage may be unavailable in some contexts; fail silently
+            }
+        }
+
+        desktopBtn.addEventListener('click', function () {
+            setViewportMode('desktop');
+        });
+
+        mobileBtn.addEventListener('click', function () {
+            setViewportMode('mobile');
+        });
+
+        // Restore last chosen viewport mode across pages (default to desktop)
+        (function restoreViewport() {
+            var saved = null;
+            try { saved = localStorage.getItem('viewport-mode'); } catch (e) { saved = null; }
+            if (saved === 'mobile' || saved === 'desktop') {
+                setViewportMode(saved);
+            } else {
+                setViewportMode('desktop');
+            }
+        })();
+
     // Create modal elements
     let modalOverlay = document.createElement('div');
     modalOverlay.className = 'pm-modal-overlay';
@@ -20,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
     modalOverlay.appendChild(modalContent);
     document.body.appendChild(modalOverlay);
 
-    // Open modal when clicking view-project
     function openModal(imgSrc, alt) {
         modalImg.src = imgSrc;
         modalImg.alt = alt || 'Progetto';
@@ -47,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             const img = btn.getAttribute('data-img');
-            // fallback: try to find image inside same card
             let src = img;
             if (!src) {
                 const card = btn.closest('.portfolio-item');
@@ -60,62 +106,63 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // HAMBURGER MENU TOGGLE (mobile)
     const navbar = document.querySelector('.navbar');
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
+    const mainNav = document.querySelector('.nav-menu');
+    const actionMenu = document.querySelector('.nav-actions');
 
-    if (hamburger && navbar && navLinks) {
+    function closeMobileMenu() {
+        if (!navbar) return;
+        navbar.classList.remove('nav-open');
+        if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    function toggleMobileMenu() {
+        if (!navbar || !hamburger) return;
+        const isOpen = navbar.classList.toggle('nav-open');
+        hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+        if (isOpen) {
+            const firstLink = (navLinks || mainNav)?.querySelector('a') || actionMenu?.querySelector('a');
+            if (firstLink) firstLink.focus();
+        }
+    }
+
+    if (hamburger && navbar) {
         hamburger.addEventListener('click', function (e) {
             e.stopPropagation();
-            const opened = navbar.classList.toggle('nav-open');
-            hamburger.setAttribute('aria-expanded', opened ? 'true' : 'false');
-            // prevent body scroll when menu is open
-            document.body.style.overflow = opened ? 'hidden' : '';
-            // focus first link for accessibility when opened
-            if (opened) {
-                const firstLink = navLinks.querySelector('a');
-                if (firstLink) firstLink.focus();
-            }
+            toggleMobileMenu();
         });
 
-        // close menu when clicking outside of the nav-links or hamburger
         document.addEventListener('click', function (e) {
-            if (navbar.classList.contains('nav-open') && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
-                navbar.classList.remove('nav-open');
-                hamburger.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = '';
+            const target = e.target;
+            if (!navbar.classList.contains('nav-open')) return;
+            if (target === hamburger) return;
+            const overlayTarget = navLinks || mainNav || actionMenu;
+            if (!overlayTarget || !overlayTarget.contains(target)) {
+                closeMobileMenu();
             }
         });
 
-        // close menu when a link is tapped (keeps default navigation)
-        navLinks.querySelectorAll('a').forEach(function (link) {
+        const mobileMenuLinks = (navLinks || mainNav || document).querySelectorAll ? (navLinks || mainNav || document).querySelectorAll('a') : [];
+        mobileMenuLinks.forEach(function (link) {
             link.addEventListener('click', function () {
-                if (navbar.classList.contains('nav-open')) {
-                    navbar.classList.remove('nav-open');
-                    hamburger.setAttribute('aria-expanded', 'false');
-                    document.body.style.overflow = '';
-                }
+                closeMobileMenu();
             });
         });
 
-        // support Escape key to close
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && navbar.classList.contains('nav-open')) {
-                navbar.classList.remove('nav-open');
-                hamburger.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = '';
+                closeMobileMenu();
             }
         });
 
-        // ensure menu closes when resizing the window
         window.addEventListener('resize', function () {
-            if (navbar.classList.contains('nav-open')) {
-                navbar.classList.remove('nav-open');
-                hamburger.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = '';
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
             }
         });
     }
-
-});
+})();
