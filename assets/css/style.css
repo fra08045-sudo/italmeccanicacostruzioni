@@ -2306,49 +2306,27 @@ html.viewport-mobile .navbar.nav-open .nav-links .nav-actions .btn-login {
     }
 }
 
-/* When the user activates the Smartphone simulation with the viewport switcher
-   (html gets the .viewport-mobile class), arrange the team section so that
-   Antonio D'Amico appears next to Ravalli Davide only in the smartphone view.
-   This does not affect the desktop layout. */
-html.viewport-mobile .team-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-html.viewport-mobile .team-grid > .team-member {
-    flex: 1 1 calc(50% - 16px);
-    max-width: calc(50% - 16px);
-    order: 5; /* default order — we'll override specific items below */
-}
-/* Keep banner on its own full row */
-html.viewport-mobile .team-grid > .nunzio-banner {
-    order: 7;
-    flex-basis: 100%;
-    max-width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-/* Reorder items (based on the current DOM order in about.html):
-   1 = Strano, 2 = Nunzio, 3 = Alloni, 4 = Ravalli, 5 = nunzio-banner, 6 = Antonio
-   Desired mobile order: Strano(1) | Nunzio(2)  then Ravalli(4) | Antonio(6)  then Alloni(3) | banner(5)
-*/
-html.viewport-mobile .team-grid > .team-member:nth-child(1) { order: 1; }
-html.viewport-mobile .team-grid > .team-member:nth-child(2) { order: 2; }
-html.viewport-mobile .team-grid > .team-member:nth-child(4) { order: 3; }
-html.viewport-mobile .team-grid > .team-member:nth-child(6) { order: 4; }
-html.viewport-mobile .team-grid > .team-member:nth-child(3) { order: 6; }
+/* Ensure compact team boxes on small screens (default mobile behavior) */
+@media (max-width: 480px) {
+    .team-member {
+        padding: 12px;
+        max-width: 100%;
+    }
 
-/* Slight size reduction for avatars inside the mobile simulation */
-html.viewport-mobile .member-image,
-html.viewport-mobile .member-image img,
-html.viewport-mobile .team-member-photo {
-    width: 110px !important;
-    height: 110px !important;
+    .member-image {
+        width: 90px;
+        height: 90px;
+        margin-bottom: 12px;
+    }
+
+    .member-image img, .team-member-photo {
+        width: 88px;
+        height: 88px;
+    }
+
+    .team h2 {
+        font-size: 1.6rem;
+    }
 }
 
-/* Make sure the Strano special size is preserved but limited on very small viewports */
-html.viewport-mobile .team-member-photo-strano {
-    width: 140px !important;
-    height: 140px !important;
-}
+
