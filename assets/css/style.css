@@ -113,88 +113,115 @@ body {
     display: block;
 }
 
-/* Group nav menu and actions so mobile overlay can show them together */
+/* Group nav menu and actions (default inline for desktop) */
 .nav-links {
-    /* hidden by default; presented as a full-screen overlay when opened */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: white;
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    padding: 110px 20px 20px; /* leave room for logo area */
-    transform: translateY(-10px);
-    opacity: 0;
-    visibility: hidden;
-    transition: transform 0.28s ease, opacity 0.28s ease, visibility 0.28s;
-    z-index: 1050; /* above other content */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    align-items: center;
+    gap: 1rem;
 }
 
-/* stack menu items vertically and increase touch targets */
 .nav-links .nav-menu {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 0;
-    margin-top: 8px;
+    list-style: none;
+    gap: 2rem;
+    align-items: center;
 }
 
-.nav-links .nav-menu li { list-style: none; }
+.nav-links .nav-actions { display: block; }
 
-.nav-links .nav-menu a {
-    font-size: 1.15rem;
-    padding: 16px 14px;
-    display: block;
-    border-radius: 8px;
-    color: var(--primary-color);
-    -webkit-tap-highlight-color: rgba(0,0,0,0.05);
+/* hamburger hidden by default (desktop) */
+.hamburger { display: none; }
+
+/* Mobile styles: turn nav-links into full-screen overlay and show hamburger */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1100;
+    }
+
+    /* prepare nav-links as a full-screen overlay (hidden by default) */
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 110px 20px 20px; /* leave room for logo area */
+        transform: translateY(-10px);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.28s ease, opacity 0.28s ease, visibility 0.28s;
+        z-index: 1050; /* above other content */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-links .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 0;
+        margin-top: 8px;
+    }
+
+    .nav-links .nav-menu li { list-style: none; }
+
+    .nav-links .nav-menu a {
+        font-size: 1.15rem;
+        padding: 16px 14px;
+        display: block;
+        border-radius: 8px;
+        color: var(--primary-color);
+        -webkit-tap-highlight-color: rgba(0,0,0,0.05);
+    }
+
+    .nav-links .nav-menu a:hover,
+    .nav-links .nav-menu a.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .nav-links .nav-actions {
+        margin-top: 18px;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 40px;
+    }
+
+    .nav-links .nav-actions .btn-login {
+        padding: 14px 22px;
+        font-size: 1rem;
+    }
+
+    /* when menu is opened by toggling .nav-open on .navbar */
+    .navbar.nav-open .nav-links {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* animate hamburger into an X */
+    .hamburger span { background-color: var(--primary-color); }
+    .navbar.nav-open .hamburger span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+    .navbar.nav-open .hamburger span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+    .navbar.nav-open .hamburger span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+    /* make touch targets larger and consistent across devices */
+    .nav-links .nav-menu a { min-height: 48px; line-height: 48px; }
+
+    /* subtle shadow to ensure visibility over videos/images */
+    .nav-links { box-shadow: 0 6px 30px rgba(0,0,0,0.2); }
+
+    /* keep logo above the overlay */
+    .navbar .logo { z-index: 1101; position: relative; }
 }
-
-.nav-links .nav-menu a:hover,
-.nav-links .nav-menu a.active {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.nav-links .nav-actions {
-    margin-top: 18px;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 40px;
-}
-
-.nav-links .nav-actions .btn-login {
-    padding: 14px 22px;
-    font-size: 1rem;
-}
-
-/* when menu is opened by toggling .nav-open on .navbar */
-.navbar.nav-open .nav-links {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-}
-
-/* animate hamburger into an X */
-.hamburger span { background-color: var(--primary-color); }
-.navbar.nav-open .hamburger span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
-.navbar.nav-open .hamburger span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
-.navbar.nav-open .hamburger span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
-
-/* make touch targets larger and consistent across devices */
-.nav-links .nav-menu a { min-height: 48px; line-height: 48px; }
-
-/* subtle shadow to ensure visibility over videos/images */
-.nav-links { box-shadow: 0 6px 30px rgba(0,0,0,0.2); }
-
-/* keep logo above the overlay */
-.navbar .logo { z-index: 1101; position: relative; }
 
 /* Notice bar under navbar */
 .notice-bar {
@@ -225,6 +252,41 @@ body {
 @keyframes marquee {
     0% { transform: translateX(0%); }
     100% { transform: translateX(-100%); }
+}
+
+/* Hero buttons (duplicate of top-right nav shown under the hero video) */
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 18px;
+    position: relative;
+    z-index: 3; /* ensure buttons appear above video and overlay */
+}
+
+.hero-buttons .nav-menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.hero-buttons .nav-menu a {
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.9);
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.hero-buttons .nav-actions .btn-login {
+    padding: 10px 16px;
+}
+
+@media (max-width: 768px) {
+    .hero-buttons { flex-direction: column; align-items: center; padding: 0 20px; }
+    .hero-buttons .nav-menu { flex-direction: column; width: 100%; }
+    .hero-buttons .nav-menu a { width: 100%; text-align: center; }
+    .hero-buttons .nav-actions .btn-login { width: 100%; }
 }
 
 /* Hero Section */
